@@ -1,13 +1,166 @@
-```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بالوعة الأنا - The Ego Sink</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --hole-color: #000;
+            --accent: #333;
+        }
 
-<!DOCTYE html>
-<html >
-<haed>
-  <meta charset="utf-"/>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
+        .container {
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+        }
 
-</haed>
+        h1 {
+            font-weight: 200;
+            letter-spacing: 5px;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+
+        /* الثقب الأسود */
+        .black-hole {
+            width: 150px;
+            height: 150px;
+            background: var(--hole-color);
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            box-shadow: 0 0 20px 5px #111, inset 0 0 50px #000;
+            position: relative;
+            border: 1px solid #111;
+        }
+
+        .black-hole::after {
+            content: '';
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 120%; height: 120%;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.05);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            color: #ccc;
+            padding: 1rem;
+            resize: none;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #777;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            background: transparent;
+            color: #888;
+            border: 1px solid #444;
+            padding: 0.8rem 2rem;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        /* تأثير النص المتلاشي */
+        .ghost-text {
+            position: absolute;
+            pointer-events: none;
+            font-size: 1rem;
+            color: white;
+            white-space: pre-wrap;
+            transition: all 2s ease-in;
+        }
+    </style>
+</head>
 <body>
-    <h1>mashal<h1>
+
+    <div class="container" id="main-ui">
+        <h1>بالوعة الأنا</h1>
+        <div class="black-hole" id="hole"></div>
+        <textarea id="inputArea" placeholder="ألقِ بما يثقل كاهلك هنا..."></textarea>
+        <br>
+        <button onclick="sinkEverything()">تخلص منه</button>
+    </div>
+
+    <script>
+        function sinkEverything() {
+            const text = document.getElementById('inputArea').value;
+            const hole = document.getElementById('hole');
+            const holeRect = hole.getBoundingClientRect();
+
+            if (!text.trim()) return;
+
+            // إنشاء عنصر نصي وهمي للتحريك
+            const ghost = document.createElement('div');
+            ghost.className = 'ghost-text';
+            ghost.innerText = text;
+            
+            // تحديد الموقع الابتدائي للنص فوق منطقة الكتابة
+            const startPos = document.getElementById('inputArea').getBoundingClientRect();
+            ghost.style.left = startPos.left + 'px';
+            ghost.style.top = startPos.top + 'px';
+            ghost.style.width = startPos.width + 'px';
+            
+            document.body.appendChild(ghost);
+
+            // مسح النص من الصندوق فوراً
+            document.getElementById('inputArea').value = '';
+
+            // بدء التحريك بعد لحظة قصيرة
+            setTimeout(() => {
+                const targetX = holeRect.left + (holeRect.width / 2);
+                const targetY = holeRect.top + (holeRect.height / 2);
+
+                ghost.style.transform = `translate(${targetX - startPos.left - (startPos.width/2)}px, ${targetY - startPos.top}px) scale(0) rotate(720deg)`;
+                ghost.style.opacity = '0';
+                ghost.style.filter = 'blur(10px)';
+            }, 100);
+
+            // حذف العنصر بعد الانتهاء
+            setTimeout(() => {
+                ghost.remove();
+            }, 2100);
+        }
+    </script>
 </body>
 </html>
+
