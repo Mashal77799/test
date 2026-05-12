@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test - Saud</title>
+    <style>
+        /* التنسيق الجمالي (CSS) */
+        :root {
+            --primary-bg: #f4f7f6;
+            --nav-bg: #1a1a2e;
+            --green-status: #2ecc71;
+            --red-status: #e74c3c;
+            --blue-status: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            margin: 0;
+            direction: rtl;
+        }
+
+        .hidden { display: none !important; }
+
+        /* شاشة الدخول */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--blue-status);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* لوحة التحكم */
+        .navbar {
+            background: var(--nav-bg);
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: var(--red-status);
+            width: auto;
+            padding: 5px 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .status-in { background: var(--green-status); }
+        .status-out { background: var(--red-status); }
+        .status-live { background: var(--blue-status); }
+
+        .section {
+            background: white;
+            margin: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            text-align: right;
+        }
+
+        /* قسم العملاء السريين */
+        .secret-area {
+            border: 2px solid #e74c3c;
+            background: #fff5f5;
+        }
+
+        .secret-input-group {
+            display: flex;
+            gap: 10px;
+            max-width: 400px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- واجهة تسجيل الدخول -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>دخول النظام</h2>
+            <input type="text" id="username" placeholder="اسم المستخدم (saud)">
+            <input type="password" id="password" placeholder="كلمة المرور (1234)">
+            <button onclick="handleLogin()">دخول</button>
+        </div>
+    </div>
+
+    <!-- لوحة التحكم الرئيسية -->
+    <div id="dashboard" class="hidden">
+        <nav class="navbar">
+            <div>أهلاً بك: <strong id="display-user"></strong></div>
+            <button class="logout-btn" onclick="location.reload()">خروج</button>
+        </nav>
+
+        <div class="stats-grid">
+            <div class="card status-in">
+                <h3>إجمالي المسجلين</h3>
+                <p style="font-size: 24px;">45 جهاز</p>
+            </div>
+            <div class="card status-live">
+                <h3>المباشرين الآن</h3>
+                <p style="font-size: 24px;">18 مستخدم</p>
+            </div>
+            <div class="card status-out">
+                <h3>حالات الخروج اليوم</h3>
+                <p style="font-size: 24px;">7 حالات</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>قائمة الأجهزة النشطة</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>كود الجهاز</th>
+                        <th>الحالة</th>
+                        <th>آخر ظهور</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>DEV-99</td>
+                        <td style="color: green;">متصل</td>
+                        <td>الآن</td>
+                    </tr>
+                    <tr>
+                        <td>DEV-102</td>
+                        <td style="color: red;">منقطع</td>
+                        <td>منذ ساعتين</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- قائمة العملاء السريين برقم سري -->
+        <div class="section secret-area">
+            <h3>🔒 قائمة العملاء السريين</h3>
+            <div id="lock-screen">
+                <p>هذا القسم محمي، يرجى إدخال الرقم السري للعرض:</p>
+                <div class="secret-input-group">
+                    <input type="password" id="secret-key" placeholder="الرمز السري (0000)">
+                    <button onclick="unlockSecrets()" style="width: 120px;">فتح</button>
+                </div>
+            </div>
+            
+            <div id="secret-list" class="hidden">
+                <table style="background: white;">
+                    <tr style="background: #333; color: white;">
+                        <th>اسم العميل الرمزي</th>
+                        <th>مستوى السرية</th>
+                    </tr>
+                    <tr>
+                        <td>العميل "صقر"</td>
+                        <td>عالي جداً</td>
+                    </tr>
+                    <tr>
+                        <td>العميل "ألفا"</td>
+                        <td>VIP</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // البرمجة المنطقية (JavaScript)
+        const USERS = { "saud": "1234" };
+        const SECRET_CODE = "0000";
+
+        function handleLogin() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+
+            if (USERS[u] && USERS[u] === p) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('display-user').innerText = u;
+            } else {
+                alert("بيانات الدخول خاطئة!");
+            }
+        }
+
+        function unlockSecrets() {
+            const key = document.getElementById('secret-key').value;
+            if (key === SECRET_CODE) {
+                document.getElementById('lock-screen').classList.add('hidden');
+                document.getElementById('secret-list').classList.remove('hidden');
+            } else {
+                alert("الرمز السري خاطئ، الدخول مرفوض.");
+            }
+        }
+    </script>
+</body>
+</html>
